@@ -1,3 +1,4 @@
+// A. Product List (Using Arrays & Objects)
 // Array of product objects
 const products = [
   {
@@ -148,6 +149,7 @@ const products = [
   },
 ];
 
+//B.An updated product list must be kept on localStorage, as AllProducts. 
  // Save the initial product list to localStorage
     function saveProductsToLocalStorage() {
         localStorage.setItem('AllProducts', JSON.stringify(products));
@@ -162,6 +164,7 @@ const products = [
         return products; // Fallback to default products if none are stored
     }
 
+//C.Display the product list dynamically on the website.
 function displayProducts() {
     // Clear existing content in each category container
     document.getElementById("la-liga-products").innerHTML = ""; 
@@ -231,6 +234,7 @@ function displayProducts() {
         productDiv.appendChild(sizeLabel);
         productDiv.appendChild(sizeSelect);
 
+//D. Each product should have an “Add to Cart” button.
 // Create and append "Add to Cart" button below product info
         const addToCartButton = document.createElement("button");
         addToCartButton.textContent = "Add to Cart";
@@ -242,6 +246,7 @@ function displayProducts() {
     });
 }
 
+// E. Add to Cart 
 const TAX_RATE = 0.15; 
 const DISCOUNT_RATE = 0.1; 
 
