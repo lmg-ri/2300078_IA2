@@ -168,38 +168,47 @@
 
             cartTotal.textContent = total.toFixed(2);
         }
-
-        cartItemsContainer.addEventListener('change', (event) => {
+        // Event listener for quantity change
+        document.getElementById('cart-items').addEventListener('change', (event) => {
             if (event.target.classList.contains('quantity-input')) {
                 const index = event.target.dataset.index;
-                const newQuantity = event.target.value;
-                cartItems[index].quantity = parseInt(newQuantity, 10);
-                updateCart();
+                const newQuantity = parseInt(event.target.value, 10);
+                if (newQuantity > 0) {
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    cart[index].quantity = newQuantity;
+                    localStorage.setItem('cart', JSON.stringify(cart)); 
+                    updateCart(); 
+                }
             }
         });
 
-        cartItemsContainer.addEventListener('click', (event) => {
+        // Event listener for remove button
+        document.getElementById('cart-items').addEventListener('click', (event) => {
             if (event.target.classList.contains('remove-button')) {
                 const index = event.target.dataset.index;
-                cartItems.splice(index, 1);
-                updateCart();
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.splice(index, 1); // Remove item from cart
+                localStorage.setItem('cart', JSON.stringify(cart)); 
+                updateCart(); 
             }
         });
-
+       
         document.getElementById('clear-all-button').addEventListener('click', () => {
-            cartItems.length = 0;
-            updateCart();
+            localStorage.removeItem('cart'); 
+            updateCart(); 
         });
 
         document.getElementById('checkout-button').addEventListener('click', () => {
-            window.location.href = 'Checkout.html';
+            window.location.href = 'Checkout.html'; 
         });
-
+     
         document.getElementById('close-button').addEventListener('click', () => {
             window.location.href = 'index.html';
         });
 
-        updateCart();
+        // Call updateCart function to populate the cart on page load
+        document.addEventListener('DOMContentLoaded', updateCart);
+
     </script>
 </body>
 </html>
