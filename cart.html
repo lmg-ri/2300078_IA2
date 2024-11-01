@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding-top: 150px;
+            background-image: url('HP.jpeg');
+            background-size: cover;
+        }
+        img.logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 120px;
+            height: auto;
+            animation: fadeIn 3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        nav {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            font-size: 1.2em;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: blue;
+        }
+        nav a:hover {
+            color: violet;
+            text-decoration: underline;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: violet;
+        }
+        .cart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total-container {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .buttons-container {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <img src="Logo.png" alt="Logo" class="logo">
+    <nav>
+        <b><a href="index.html#la-liga">La Liga Jerseys</a></b> |
+        <b><a href="index.html#epl">EPL Jerseys</a></b> |
+        <b><a href="index.html#nba">NBA Jerseys</a></b> |
+        <b><a href="index.html#nfl">NFL Jerseys</a></b>
+    </nav>
+    <h2>Your Cart</h2>
+    <div class="cart-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Sub-total</th>
+                    <th>Discount</th>
+                    <th>Tax</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items">
+                <!-- Cart items will be dynamically inserted here -->
+            </tbody>
+        </table>
+        <div class="total-container">
+            <p>Total: $<span id="cart-total">0.00</span></p>
+        </div>
+        <div class="buttons-container">
+            <button id="clear-all-button">Clear All</button>
+            <button id="checkout-button">Check Out</button>
+            <button id="close-button">Close</button>
+        </div>
+    </div>
+    <script>
+        const cartItems = [];
+
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+
+        function updateCart() {
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+
+            cartItems.forEach((item, index) => {
+                const subTotal = item.price * item.quantity;
+                const tax = subTotal * 0.05;
+                const totalItemPrice = subTotal - item.discount + tax;
+                total += totalItemPrice;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>$${item.price}</td>
+                    <td>
+                        <input type="number" value="${item.quantity}" min="1" data-index="${index}" class="quantity-input">
+                    </td>
+                    <td>$${subTotal}</td>
+                    <td>$${item.discount}</td>
+                    <td>$${tax.toFixed(2)}</td>
+                    <td>$${totalItemPrice.toFixed(2)}</td>
+                    <td>
+                        <button data-index="${index}" class="remove-button">Remove</button>
+                    </td>
+                `;
+                cartItemsContainer.appendChild(row);
+            });
+
+            cartTotal.textContent = total.toFixed(2);
+        }
+
+        cartItemsContainer.addEventListener('change', (event) => {
+            if (event.target.classList.contains('quantity-input')) {
+                const index = event.target.dataset.index;
+                const newQuantity = event.target.value;
+                cartItems[index].quantity = parseInt(newQuantity, 10);
+                updateCart();
+            }
+        });
+
+        cartItemsContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-button')) {
+                const index = event.target.dataset.index;
+                cartItems.splice(index, 1);
+                updateCart();
+            }
+        });
+
+        document.getElementById('clear-all-button').addEventListener('click', () => {
+            cartItems.length = 0;
+            updateCart();
+        });
+
+        document.getElementById('checkout-button').addEventListener('click', () => {
+            window.location.href = 'Checkout.html';
+        });
+
+        document.getElementById('close-button').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        updateCart();
+    </script>
+</body>
+</html>
