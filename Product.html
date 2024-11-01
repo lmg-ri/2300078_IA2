@@ -139,7 +139,7 @@
 <h2 id="nfl">NFL Jerseys</h2>
 <div id="nfl-products" class="category-container"></div> 
 
-<a href="cart.html"><button>View Cart</button></a>
+<button onclick="viewCart()">View Cart</button>
 <script > 
     // A. Product List (Using Arrays & Objects)
 // Array of product objects
@@ -419,7 +419,10 @@ function addToCart(productId) {
     localStorage.setItem("cart", JSON.stringify(cart));
     alert(`${product.name} (Size: ${selectedSize}) has been added to your cart.`);
 }
-
+    
+function viewCart() {
+    window.location.href = 'cart.html';
+}
 
 // Call to save initial products to localStorage
     saveProductsToLocalStorage();
