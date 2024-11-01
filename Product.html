@@ -420,21 +420,6 @@ function addToCart(productId) {
     alert(`${product.name} (Size: ${selectedSize}) has been added to your cart.`);
 }
 
-// Calculate Total Function
-function calculateCartTotals() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let subtotal = 0;
-
-    cart.forEach(item => {
-        subtotal += item.price * item.quantity;
-    });
-
-    const tax = subtotal * TAX_RATE;
-    const discount = subtotal * DISCOUNT_RATE; 
-    const total = subtotal + tax - discount;
-
-    return { subtotal, tax, discount, total };
-}
 
 // Call to save initial products to localStorage
     saveProductsToLocalStorage();
