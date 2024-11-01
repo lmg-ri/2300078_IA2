@@ -135,10 +135,10 @@
         const TAX_RATE = 0.15; 
         const cartItems = [];
 
-        const cartItemsContainer = document.getElementById('cart-items');
-        const cartTotal = document.getElementById('cart-total');
-
         function updateCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
             cartItemsContainer.innerHTML = '';
             let total = 0;
 
