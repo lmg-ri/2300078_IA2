@@ -133,45 +133,43 @@
     </div>
     <script>
         const TAX_RATE = 0.15; 
-        const cartItems = [];
 
          function viewCart() {
         updateCart();
     }
+  function updateCart() {
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cartItemsContainer.innerHTML = '';
+        let total = 0;
 
-        function updateCart() {
-            const cartItemsContainer = document.getElementById('cart-items');
-            const cartTotal = document.getElementById('cart-total');
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cartItemsContainer.innerHTML = '';
-            let total = 0;
+        cart.forEach((item, index) => {
+            const subTotal = item.price * item.quantity;
+            const tax = subTotal * TAX_RATE;
+            const totalItemPrice = subTotal - item.discount + tax; // Make sure item.discount is defined
+            total += totalItemPrice;
 
-            cartItems.forEach((item, index) => {
-                const subTotal = item.price * item.quantity;
-                const tax = subTotal * TAX_RATE;
-                const totalItemPrice = subTotal - item.discount + tax;
-                total += totalItemPrice;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.name}</td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td>
+                    <input type="number" value="${item.quantity}" min="1" data-index="${index}" class="quantity-input">
+                </td>
+                <td>$${subTotal.toFixed(2)}</td>
+                <td>$${item.discount.toFixed(2)}</td>
+                <td>$${tax.toFixed(2)}</td>
+                <td>$${totalItemPrice.toFixed(2)}</td>
+                <td>
+                    <button data-index="${index}" class="remove-button">Remove</button>
+                </td>
+            `;
+            cartItemsContainer.appendChild(row);
+        });
 
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>$${item.price}</td>
-                    <td>
-                        <input type="number" value="${item.quantity}" min="1" data-index="${index}" class="quantity-input">
-                    </td>
-                    <td>$${subTotal}</td>
-                    <td>$${item.discount}</td>
-                    <td>$${tax.toFixed(2)}</td>
-                    <td>$${totalItemPrice.toFixed(2)}</td>
-                    <td>
-                        <button data-index="${index}" class="remove-button">Remove</button>
-                    </td>
-                `;
-                cartItemsContainer.appendChild(row);
-            });
-
-            cartTotal.textContent = total.toFixed(2);
-        }
+        cartTotal.textContent = total.toFixed(2);
+    }
         // Event listener for quantity change
         document.getElementById('cart-items').addEventListener('change', (event) => {
             if (event.target.classList.contains('quantity-input')) {
