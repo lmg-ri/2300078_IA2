@@ -135,6 +135,10 @@
         const TAX_RATE = 0.15; 
         const cartItems = [];
 
+         function viewCart() {
+        updateCart();
+    }
+
         function updateCart() {
             const cartItemsContainer = document.getElementById('cart-items');
             const cartTotal = document.getElementById('cart-total');
