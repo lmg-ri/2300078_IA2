@@ -132,6 +132,7 @@
         </div>
     </div>
     <script>
+        const TAX_RATE = 0.15; 
         const cartItems = [];
 
         const cartItemsContainer = document.getElementById('cart-items');
@@ -143,7 +144,7 @@
 
             cartItems.forEach((item, index) => {
                 const subTotal = item.price * item.quantity;
-                const tax = subTotal * 0.05;
+                const tax = subTotal * TAX_RATE;
                 const totalItemPrice = subTotal - item.discount + tax;
                 total += totalItemPrice;
 
