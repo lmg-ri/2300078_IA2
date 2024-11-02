@@ -138,14 +138,8 @@
 
 <h2 id="nfl">NFL Jerseys</h2>
 <div id="nfl-products" class="category-container"></div> 
-<<<<<<< HEAD
 
 <button onclick="viewCart()">View Cart</button>
-=======
-    
-<div id="cart"></div>
-<button onclick="displayCart()">View Cart</button>
->>>>>>> ef748a4c806bfbb1ff581e1cda89bd441305323c
 <script > 
     // A. Product List (Using Arrays & Objects)
 // Array of product objects
@@ -396,24 +390,15 @@ function displayProducts() {
 }
 
 // E. Add to Cart 
-<<<<<<< HEAD
 const TAX_RATE = 0.15; 
 const DISCOUNT_RATE = 0.1; 
 
 // Add to Cart Function 
-=======
-// Constants for tax and discount rates
-const TAX_RATE = 0.15;
-const DISCOUNT_RATE = 0.1;
-
-// Add to Cart Function
->>>>>>> ef748a4c806bfbb1ff581e1cda89bd441305323c
 function addToCart(productId) {
     // Find the product by ID
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
-<<<<<<< HEAD
 // Get the selected size
     const selectedSize = document.getElementById(`size-${productId}`).value;
 
@@ -421,22 +406,12 @@ function addToCart(productId) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     
    // Check if the product with the selected size is already in the cart
-=======
-    // Get the selected size
-    const selectedSize = document.getElementById(`size-${productId}`).value;
-
-    // Get current cart from localStorage
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    // Check if the product with the selected size is already in the cart
->>>>>>> ef748a4c806bfbb1ff581e1cda89bd441305323c
     const existingProductIndex = cart.findIndex(item => item.id === productId && item.size === selectedSize);
     if (existingProductIndex !== -1) {
         // If it exists, increase the quantity
         cart[existingProductIndex].quantity += 1;
     } else {
         // If it doesn't exist, add it to the cart with the selected size
-<<<<<<< HEAD
         cart.push({ ...product, size: selectedSize, quantity: 1 });
     }
 
@@ -454,38 +429,6 @@ function viewCart() {
 
 // Call displayProducts to show products on page load
 displayProducts();
-=======
-        cart.push({ id: productId, name: product.name, size: selectedSize, price: product.price, quantity: 1 });
-    }
-
-    // Calculate the total price for all items in the cart
-    let totalPrice = 0;
-    cart.forEach(item => {
-        totalPrice += item.price * item.quantity;
-    });
-
-    // Save updated cart and total price to localStorage
-    localStorage.setItem("cart", JSON.stringify(cart));
-    localStorage.setItem("totalPrice", totalPrice.toFixed(2));
-
-    alert(`${product.name} (Size: ${selectedSize}) has been added to your cart.`);
-}
-
-// Redirect to the cart page
-function displayCart() {
-    window.location.href = "cart.html";
-}
-
-// Initialize the app
-function init() {
-    saveProductsToLocalStorage();
-    const loadedProducts = loadProductsFromLocalStorage();
-    displayProducts(loadedProducts);
-}
-
-init();
-
->>>>>>> ef748a4c806bfbb1ff581e1cda89bd441305323c
 </script>
 
 </body>
