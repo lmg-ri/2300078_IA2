@@ -138,8 +138,9 @@
 
 <h2 id="nfl">NFL Jerseys</h2>
 <div id="nfl-products" class="category-container"></div> 
-
-<button onclick="viewCart()">View Cart</button>
+    
+<div id="cart"></div>
+<button onclick="displayCart()">View Cart</button>
 <script > 
     // A. Product List (Using Arrays & Objects)
 // Array of product objects
@@ -390,45 +391,59 @@ function displayProducts() {
 }
 
 // E. Add to Cart 
-const TAX_RATE = 0.15; 
-const DISCOUNT_RATE = 0.1; 
+// Constants for tax and discount rates
+const TAX_RATE = 0.15;
+const DISCOUNT_RATE = 0.1;
 
-// Add to Cart Function 
+// Add to Cart Function
 function addToCart(productId) {
     // Find the product by ID
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
-// Get the selected size
+    // Get the selected size
     const selectedSize = document.getElementById(`size-${productId}`).value;
 
-// Get current cart from localStorage
+    // Get current cart from localStorage
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    
-   // Check if the product with the selected size is already in the cart
+
+    // Check if the product with the selected size is already in the cart
     const existingProductIndex = cart.findIndex(item => item.id === productId && item.size === selectedSize);
     if (existingProductIndex !== -1) {
         // If it exists, increase the quantity
         cart[existingProductIndex].quantity += 1;
     } else {
         // If it doesn't exist, add it to the cart with the selected size
-        cart.push({ ...product, size: selectedSize, quantity: 1 });
+        cart.push({ id: productId, name: product.name, size: selectedSize, price: product.price, quantity: 1 });
     }
 
-    // Save updated cart to localStorage
+    // Calculate the total price for all items in the cart
+    let totalPrice = 0;
+    cart.forEach(item => {
+        totalPrice += item.price * item.quantity;
+    });
+
+    // Save updated cart and total price to localStorage
     localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem("totalPrice", totalPrice.toFixed(2));
+
     alert(`${product.name} (Size: ${selectedSize}) has been added to your cart.`);
 }
-    
-function viewCart() {
-    window.location.href = 'cart.html';
+
+// Redirect to the cart page
+function displayCart() {
+    window.location.href = "cart.html";
 }
 
-// Call to save initial products to localStorage
+// Initialize the app
+function init() {
     saveProductsToLocalStorage();
+    const loadedProducts = loadProductsFromLocalStorage();
+    displayProducts(loadedProducts);
+}
 
-// Call displayProducts to show products on page load
-displayProducts();
+init();
+
 </script>
 
 </body>
