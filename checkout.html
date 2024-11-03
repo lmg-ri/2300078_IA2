@@ -1,1 +1,222 @@
+<!DOCTYPE html>
+<head>
+<title>Checkout Page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding-top: 50px;
+            background-image: url('BGP.jpg');
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        img.logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 120px;
+            height: auto;
+            animation: fadeIn 3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h3 {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        h3 a {
+            text-decoration: none;
+            color: blue;
+        }
+
+        h3 a:hover {
+            color: violet;
+            text-decoration: underline;
+        }
+
+        h1, h2 {
+            font-family: Courier New;
+        }
+
+        #cart-summary, #checkoutForm table {
+            width: 80%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            font-family: Times New Roman;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .button-container, .total {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: violet;
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: right;
+            margin-right: 10%;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="Logo.png" alt="Logo" class="logo">
+    <h3>
+        <a href="Product.html">Product</a>
+    </h3>
+
+    <h1>Checkout</h1>
+
+    <h2>Shopping Cart Summary</h2>
+    <table id="cart-summary">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Sub-total</th>
+            </tr>
+        </thead>
+        <tbody id="cart-items">
+            
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="total">Total Cost:</td>
+                <td id="total-cost">$0.00</td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <h2>Shipping Details</h2>
+    <form id="checkoutForm">
+        <table>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" id="text1" name="name" required></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><input type="text" id="text2" name="address" required></td>
+            </tr>
+            <tr>
+                <td>City</td>
+                <td><input type="text" id="text3" name="city" required></td>
+            </tr>
+            <tr>
+                <td>Parish</td>
+                <td><input type="text" id="text4" name="parish" required></td>
+            </tr>
+            <tr>
+                <td>Country</td>
+                <td><input type="text" id="text5" name="country" required></td>
+            </tr>
+            <tr>
+                <td>Amount Being Paid</td>
+                <td><input type="number" id="amountPaid" name="amountPaid" required></td>
+            </tr>
+        </table>
+
+        <div class="button-container">
+            <button type="button" onclick="confirmCheckout()">Confirm Checkout</button>
+            <button type="button" onclick="cancelCheckout()">Cancel</button>
+        </div>
+    </form>
+
+    <script>
+        let totalCost = 0;
+        
+        function displayCartSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsContainer = document.getElementById("cart-items");
+            const totalCostContainer = document.getElementById("total-cost");
+    
+            cart.forEach((item) => {
+                const subTotal = item.price * item.quantity;
+                totalCost += subTotal;
+    
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${subTotal.toFixed(2)}</td>
+                `;
+                cartItemsContainer.appendChild(row);
+            });
+    
+            totalCostContainer.textContent = `$${totalCost.toFixed(2)}`;
+        }
+    
+        function confirmCheckout() {
+            const amountPaid = parseFloat(document.getElementById("amountPaid").value);
+    
+            if (amountPaid < totalCost) {
+                alert("Error: Amount Being Paid is less than the total cost. Please pay the full amount to proceed.");
+            } else {
+                
+                const name = document.getElementById("text1").value;
+                const address = document.getElementById("text2").value;
+                const city = document.getElementById("text3").value;
+                const parish = document.getElementById("text4").value;
+                const country = document.getElementById("text5").value;
+    
+                const checkoutDetails = {
+                    name,
+                    address,
+                    city,
+                    parish,
+                    country,
+                    amountPaid,
+                    totalCost
+                };
+                localStorage.setItem("checkoutDetails", JSON.stringify(checkoutDetails));
+    
+                window.location.href = "Invoice.html";
+            }
+        }
+        displayCartSummary();
+    </script>
+
+</body>
+</html>
 
