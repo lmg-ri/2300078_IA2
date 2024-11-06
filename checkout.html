@@ -8,7 +8,7 @@
             align-items: center;
             margin: 0;
             padding-top: 50px;
-            background-image: url('Assets/BGP.jpg');
+            background-image: url('BGP.jpg');
             background-size: cover;
             font-family: Arial, sans-serif;
             color: #333;
@@ -99,7 +99,7 @@
 </head>
 <body>
 
-    <img src="Assets/Logo.png" alt="Logo" class="logo">
+    <img src="Logo.png" alt="Logo" class="logo">
     <h3>
         <a href="Product.html">Product</a>
     </h3>
@@ -188,35 +188,42 @@
         }
     
         function confirmCheckout() {
-            const amountPaid = parseFloat(document.getElementById("amountPaid").value);
     
-            if (amountPaid < totalCost) {
-                alert("Error: Amount Being Paid is less than the total cost. Please pay the full amount to proceed.");
-            } else {
-                
-                const name = document.getElementById("text1").value;
-                const address = document.getElementById("text2").value;
-                const city = document.getElementById("text3").value;
-                const parish = document.getElementById("text4").value;
-                const country = document.getElementById("text5").value;
+    const name = document.getElementById("text1").value;
+    const address = document.getElementById("text2").value;
+    const city = document.getElementById("text3").value;
+    const parish = document.getElementById("text4").value;
+    const country = document.getElementById("text5").value;
+    const amountPaid = parseFloat(document.getElementById("amountPaid").value);
+
     
-                const checkoutDetails = {
-                    name,
-                    address,
-                    city,
-                    parish,
-                    country,
-                    amountPaid,
-                    totalCost
-                };
-                localStorage.setItem("checkoutDetails", JSON.stringify(checkoutDetails));
+    if (!name || !address || !city || !parish || !country || isNaN(amountPaid)) {
+        alert("Please fill in all fields to proceed.");
+        return;
+    }
+
     
-                window.location.href = "Invoice.html";
-            }
-        }
+    if (amountPaid < totalCost) {
+        alert("Error: Amount Being Paid is less than the total cost. Please pay the full amount to proceed.");
+    } else {
+        
+        const checkoutDetails = {
+            name,
+            address,
+            city,
+            parish,
+            country,
+            amountPaid,
+            totalCost
+        };
+        localStorage.setItem("checkoutDetails", JSON.stringify(checkoutDetails));
+
+        window.location.href = "Invoice.html";
+    }
+}
+
         displayCartSummary();
     </script>
 
 </body>
 </html>
-
