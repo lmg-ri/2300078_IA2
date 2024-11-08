@@ -53,34 +53,51 @@
             margin-top: 10px;
             background-color: #F7D9B0;
         }
+
+        select {
+        width: 100%;
+        max-width: 300px;
+        padding: 10px;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+
+    button:hover {
+    background-color: violet; 
+    opacity: 0.8; 
+}
+
+
     </style>
 </head>
 <body>
     <img src="Assets/Logo.png" alt="Logo" class="logo">
     <div class="registration-container">
-        <h2>Register</h2>
+       <center> <h2>Register</h2> </center>
         <form id="registrationForm">
             <input type="text" id="first-name" placeholder="First Name" required>
             <input type="text" id="last-name" placeholder="Last Name" required>
             <input type="date" id="dob" placeholder="Date of Birth" required>
+            <br>
+            <input type="tel" id="phone" placeholder="Phone Number" required>
+            <input type="email" id="email" placeholder="Email Address" required>
+            <input type="text" id="trn" placeholder="Tax Registration Number (000-000-000)" pattern="\d{3}-\d{3}-\d{3}" required>
+            <br>
             <select id="gender" required>
                 <option value="">Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
             </select>
-            <input type="tel" id="phone" placeholder="Phone Number" required>
-            <input type="email" id="email" placeholder="Email Address" required>
-            <input type="text" id="trn" placeholder="Tax Registration Number (000-000-000)" pattern="\d{3}-\d{3}-\d{3}" required>
-            
             <input type="password" id="password" placeholder="Password" minlength="8" required>
             <input type="password" id="confirm-password" placeholder="Confirm Password" minlength="8" required>
-            
+            <br>
             <label>
                 <input type="checkbox" id="show-password"> Show Password
             </label>
-
+            <br>
             <button type="submit">Register</button>
             <button type="button" onclick="clearForm()">Cancel</button>
+            <br><br>
             <a href="Login.html">Have an Account?</a>
         </form>
         <p id="error-message"></p>
