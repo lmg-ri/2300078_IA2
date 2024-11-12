@@ -12,6 +12,7 @@
             height: 100vh;                     
             margin: 5;        
             background-image: url(Assets/BGP.jpg);
+             font-family: Arial, sans-serif;
         }
 
         img { 
@@ -52,10 +53,15 @@
 
         .invoice-container {
             width: 80%;
+            max-width: 800px;
             margin: auto;
             padding: 20px;
             border: 1px solid #ddd;
             background-color: #f9f9f9;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0.3, 0.7);
+            border-collapse: collapse;
+            
         }
 
         h2 {
@@ -64,10 +70,11 @@
 
         .invoice-item {
             margin-bottom: 10px;
+            font-weight: 100;
         }
 
         .invoice-total {
-            margin-top: 20px;
+            margin-top: 2px;
             font-weight: bold;
         }
 
@@ -94,6 +101,13 @@
         .button:hover {
             background-color: #0056b3;
         }
+
+        .invoiceTable{
+            padding: 10px;
+            text-align: left;
+            
+        }
+
     </style>
 </head>
 <body>
@@ -105,13 +119,44 @@
     <a href="Product.html">Product</a>
 </h3>
 
+
 <div class="invoice-container">
-    <h2>Invoice</h2>
-    <div id="invoiceItems"></div>
-    <div id="subtotalAmount" class="invoice-total"></div>
-    <div id="taxAmount" class="invoice-total"></div>
-    <div id="discountAmount" class="invoice-total"></div>
-    <div id="totalAmount" class="invoice-total"></div>
+    <u><h2 class="it">Invoice</h2></u>
+<table class="invoiceTable">
+    <thead>
+         <tr>
+             <th>
+                 <div id="invoiceItems"></div>
+             </th>
+         </tr>   
+        <tr>
+            <th>
+                <div id="totalAmount" class="invoice-total"></div>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <div id="subtotalAmount" class="invoice-total"></div>
+            </th>
+        </tr>
+        <tr>
+            <th><div id="subtotalAmount" class="invoice-total"></div></th>
+        </tr>
+        <tr>
+            <th>
+                <div id="taxAmount" class="invoice-total"></div>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <div id="discountAmount" class="invoice-total"></div>
+            </th>
+        </tr>
+    </thead>
+</table>
+   
+    
+    
 </div>
 
 <!-- Cancel and Exit buttons at the bottom center -->
