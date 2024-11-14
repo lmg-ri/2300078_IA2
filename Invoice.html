@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
     <style>
         body {
@@ -10,84 +9,46 @@
             flex-direction: column;
             align-items: center;
             font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f9f9f9;
+            background-color: #f8f9fa;
+            padding-top: 30px;
         }
-
         .invoice-container {
             width: 80%;
-            max-width: 800px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            border: 1px solid #ccc;
             padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            font-family: 'Courier New', Courier, monospace;
             text-align: center;
         }
-
-        h1, h2, h3 {
-            margin: 0;
-            font-family: 'Courier New', monospace;
-        }
-
         table {
             width: 100%;
-            margin-top: 20px;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
-
         th, td {
+            padding: 10px;
             border: 1px solid #ddd;
-            padding: 8px;
             text-align: center;
         }
-
-        th {
-            background-color: #f2f2f2;
+        .total-row td {
             font-weight: bold;
-        }
-
-        .total, .amount-paid {
-            font-weight: bold;
-            text-align: right;
-        }
-
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 1em;
-            background-color: blue;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: violet;
         }
     </style>
 </head>
 <body>
 
     <div class="invoice-container">
-        <h1>Invoice</h1>
-        <h3>Company: GlamGlaze</h3>
-        <p>Date: <span id="invoice-date"></span></p>
-        <p>Invoice Number: <span id="invoice-number"></span></p>
-        <p>TRN: <span id="trn"></span></p>
+        <h1>Elite Team Thread's</h1>
+        <h2>Invoice</h2>
 
-        <h2>Shipping Details</h2>
-        <p>Name: <span id="shipping-name"></span></p>
-        <p>Address: <span id="shipping-address"></span></p>
-        <p>City: <span id="shipping-city"></span></p>
-        <p>Parish: <span id="shipping-parish"></span></p>
-        <p>Country: <span id="shipping-country"></span></p>
+        <div id="customer-details"></div>
 
-        <h2>Purchased Items</h2>
+        <h3>Order Summary</h3>
         <table>
             <thead>
                 <tr>
@@ -97,73 +58,83 @@
                     <th>Sub-total</th>
                 </tr>
             </thead>
-            <tbody id="invoice-items"></tbody>
+            <tbody id="order-summary"></tbody>
         </table>
 
-        <p class="total">Total Cost: <span id="total-cost">$0.00</span></p>
-        <p class="amount-paid">Amount Paid: <span id="amount-paid">$0.00</span></p>
-
-        <div class="button-container">
-            <button onclick="downloadInvoice()">Download Invoice</button>
-        </div>
+        <table>
+            <tr>
+                <td>Subtotal:</td>
+                <td id="subtotal">$0.00</td>
+            </tr>
+            <tr>
+                <td>Discount:</td>
+                <td id="discount">$0.00</td>
+            </tr>
+            <tr>
+                <td>Tax (15%):</td>
+                <td id="tax">$0.00</td>
+            </tr>
+            <tr class="total-row">
+                <td>Total:</td>
+                <td id="total">$0.00</td>
+            </tr>
+            <tr>
+                <td>Amount Paid:</td>
+                <td id="amount-paid">$0.00</td>
+            </tr>
+            <tr class="total-row">
+                <td>Balance Due:</td>
+                <td id="balance-due">$0.00</td>
+            </tr>
+        </table>
     </div>
 
     <script>
-        function generateInvoice() {
-            const registrations = JSON.parse(localStorage.getItem("RegistrationData")) || [];
-            const checkoutDetails = JSON.parse(localStorage.getItem("checkoutDetails")) || {};
-            const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-            
-            const trn = registrations[registrations.length - 1]?.trn || "N/A";
-            const invoiceNumber = Date.now();
-            const date = new Date().toLocaleDateString();
+        const TAX_RATE = 0.15;  
+        const DISCOUNT_RATE = 0.10; 
 
-            document.getElementById("invoice-date").textContent = date;
-            document.getElementById("invoice-number").textContent = invoiceNumber;
-            document.getElementById("trn").textContent = trn;
+        function displayInvoice() {
+            const checkoutDetails = JSON.parse(localStorage.getItem("checkoutDetails"));
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-            // Populate shipping details
-            document.getElementById("shipping-name").textContent = checkoutDetails.name || "N/A";
-            document.getElementById("shipping-address").textContent = checkoutDetails.address || "N/A";
-            document.getElementById("shipping-city").textContent = checkoutDetails.city || "N/A";
-            document.getElementById("shipping-parish").textContent = checkoutDetails.parish || "N/A";
-            document.getElementById("shipping-country").textContent = checkoutDetails.country || "N/A";
+            let subtotal = 0;
+            const orderSummary = document.getElementById("order-summary");
 
-            // Populate purchased items
-            const invoiceItemsContainer = document.getElementById("invoice-items");
-            let totalCost = 0;
-
-            cartItems.forEach(item => {
-                const subTotal = item.price * item.quantity;
-                totalCost += subTotal;
+            cart.forEach((item) => {
+                const itemSubtotal = item.price * item.quantity;
+                subtotal += itemSubtotal;
 
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${item.name}</td>
                     <td>$${item.price.toFixed(2)}</td>
                     <td>${item.quantity}</td>
-                    <td>$${subTotal.toFixed(2)}</td>
+                    <td>$${itemSubtotal.toFixed(2)}</td>
                 `;
-                invoiceItemsContainer.appendChild(row);
+                orderSummary.appendChild(row);
             });
 
-            // Display totals
-            document.getElementById("total-cost").textContent = `$${totalCost.toFixed(2)}`;
-            document.getElementById("amount-paid").textContent = `$${checkoutDetails.amountPaid.toFixed(2) || "0.00"}`;
+            const discount = subtotal * DISCOUNT_RATE;
+            const taxableAmount = subtotal - discount;
+            const tax = taxableAmount * TAX_RATE;
+            const total = taxableAmount + tax;
+            const balanceDue = total - checkoutDetails.amountPaid;
+
+            document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById("discount").textContent = `-$${discount.toFixed(2)}`;
+            document.getElementById("tax").textContent = `$${tax.toFixed(2)}`;
+            document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+            document.getElementById("amount-paid").textContent = `$${checkoutDetails.amountPaid.toFixed(2)}`;
+            document.getElementById("balance-due").textContent = `$${balanceDue.toFixed(2)}`;
+
+            document.getElementById("customer-details").innerHTML = `
+                <p><strong>Name:</strong> ${checkoutDetails.name}</p>
+                <p><strong>Address:</strong> ${checkoutDetails.address}, ${checkoutDetails.city}, ${checkoutDetails.parish}, ${checkoutDetails.country}</p>
+                <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+            `;
         }
 
-        // Function to download invoice
-        function downloadInvoice() {
-            const invoiceHTML = document.querySelector(".invoice-container").outerHTML;
-            const blob = new Blob([invoiceHTML], { type: "text/html" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `Invoice_${Date.now()}.html`;
-            link.click();
-        }
-
-        // Generate invoice on page load
-        window.onload = generateInvoice;
+        displayInvoice();
     </script>
 
 </body>
