@@ -6,226 +6,165 @@
     <title>Invoice</title>
     <style>
         body {
-            display: flex;                      
-            justify-content: center;            
-            align-items: flex-start;                
-            height: 100vh;                     
-            margin: 5;        
-            background-image: url(Assets/BGP.jpg);
-             font-family: Arial, sans-serif;
-        }
-
-        img { 
-            position: absolute;
-            top: 0;
-            left: 0;
-            margin: 5px;
-            width: 100px; 
-            height: 100px;
-            animation: fadeIn 3s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        h3 {
-             position: absolute;              
-             top: 10px;           
-             right: 20px;         
-          }
-
-        h3 a {
-            text-decoration: none; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             font-family: Arial, sans-serif;
-            color: blue;         
-        }
-
-        h3 a:hover {
-            color: violet;    
-            text-decoration: underline; 
+            padding: 20px;
+            background-color: #f9f9f9;
         }
 
         .invoice-container {
             width: 80%;
             max-width: 800px;
-            margin: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             padding: 20px;
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0.3, 0.7);
-            border-collapse: collapse;
-            
-        }
-
-        h2 {
             text-align: center;
         }
 
-        .invoice-item {
-            margin-bottom: 10px;
-            font-weight: 100;
+        h1, h2, h3 {
+            margin: 0;
+            font-family: 'Courier New', monospace;
         }
 
-        .invoice-total {
-            margin-top: 2px;
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
             font-weight: bold;
         }
 
-        /* Button styles */
-        .buttons {
-            position: fixed;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
+        .total, .amount-paid {
+            font-weight: bold;
+            text-align: right;
         }
 
-        .button {
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
             padding: 10px 20px;
-            background-color: #007BFF;
+            font-size: 1em;
+            background-color: blue;
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
-            margin: 0 10px;
-            font-size: 16px;
         }
 
-        .button:hover {
-            background-color: #0056b3;
+        button:hover {
+            background-color: violet;
         }
-
-        .invoiceTable{
-            padding: 10px;
-            text-align: left;
-            
-        }
-
     </style>
 </head>
 <body>
 
-<img src="Assets/Logo.png" alt="Logo"> <br>
-    
-<h3>
-    <a href="Home.html">Home</a>&nbsp;&nbsp;
-    <a href="Product.html">Product</a>
-</h3>
+    <div class="invoice-container">
+        <h1>Invoice</h1>
+        <h3>Company: GlamGlaze</h3>
+        <p>Date: <span id="invoice-date"></span></p>
+        <p>Invoice Number: <span id="invoice-number"></span></p>
+        <p>TRN: <span id="trn"></span></p>
 
+        <h2>Shipping Details</h2>
+        <p>Name: <span id="shipping-name"></span></p>
+        <p>Address: <span id="shipping-address"></span></p>
+        <p>City: <span id="shipping-city"></span></p>
+        <p>Parish: <span id="shipping-parish"></span></p>
+        <p>Country: <span id="shipping-country"></span></p>
 
-<div class="invoice-container">
-    <u><h2 class="it">Invoice</h2></u>
-<table class="invoiceTable">
-    <thead>
-         <tr>
-             <th>
-                 <div id="invoiceItems"></div>
-             </th>
-         </tr>   
-        <tr>
-            <th>
-                <div id="totalAmount" class="invoice-total"></div>
-            </th>
-        </tr>
-        <tr>
-            <th>
-                <div id="subtotalAmount" class="invoice-total"></div>
-            </th>
-        </tr>
-        <tr>
-            <th><div id="subtotalAmount" class="invoice-total"></div></th>
-        </tr>
-        <tr>
-            <th>
-                <div id="taxAmount" class="invoice-total"></div>
-            </th>
-        </tr>
-        <tr>
-            <th>
-                <div id="discountAmount" class="invoice-total"></div>
-            </th>
-        </tr>
-    </thead>
-</table>
-   
-    
-    
-</div>
+        <h2>Purchased Items</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Sub-total</th>
+                </tr>
+            </thead>
+            <tbody id="invoice-items"></tbody>
+        </table>
 
-<!-- Cancel and Exit buttons at the bottom center -->
-<div class="buttons">
-    <button class="button" id="cancelBtn" onclick="cancelOrder()">Cancel</button>
-    <button class="button" id="exitBtn" onclick="exitPage()">Exit</button>
-</div>
+        <p class="total">Total Cost: <span id="total-cost">$0.00</span></p>
+        <p class="amount-paid">Amount Paid: <span id="amount-paid">$0.00</span></p>
 
-<script>
-    // Global arrays for taxes and discounts
-    const taxRate = 0.07; // 7% tax
-    const discountRate = 0.1; // 10% discount for demonstration
+        <div class="button-container">
+            <button onclick="downloadInvoice()">Download Invoice</button>
+        </div>
+    </div>
 
-    // Get the cart from localStorage
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    <script>
+        function generateInvoice() {
+            const registrations = JSON.parse(localStorage.getItem("RegistrationData")) || [];
+            const checkoutDetails = JSON.parse(localStorage.getItem("checkoutDetails")) || {};
+            const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+            
+            const trn = registrations[registrations.length - 1]?.trn || "N/A";
+            const invoiceNumber = Date.now();
+            const date = new Date().toLocaleDateString();
 
-    // Function to calculate and render the invoice
-    function renderInvoice() {
-        const invoiceItems = document.getElementById('invoiceItems');
-        const subtotalAmount = document.getElementById('subtotalAmount');
-        const taxAmount = document.getElementById('taxAmount');
-        const discountAmount = document.getElementById('discountAmount');
-        const totalAmount = document.getElementById('totalAmount');
+            document.getElementById("invoice-date").textContent = date;
+            document.getElementById("invoice-number").textContent = invoiceNumber;
+            document.getElementById("trn").textContent = trn;
 
-        let subtotal = 0;
-        let tax = 0;
-        let discount = 0;
-        let total = 0;
+            // Populate shipping details
+            document.getElementById("shipping-name").textContent = checkoutDetails.name || "N/A";
+            document.getElementById("shipping-address").textContent = checkoutDetails.address || "N/A";
+            document.getElementById("shipping-city").textContent = checkoutDetails.city || "N/A";
+            document.getElementById("shipping-parish").textContent = checkoutDetails.parish || "N/A";
+            document.getElementById("shipping-country").textContent = checkoutDetails.country || "N/A";
 
-        // Clear previous items
-        invoiceItems.innerHTML = '';
+            // Populate purchased items
+            const invoiceItemsContainer = document.getElementById("invoice-items");
+            let totalCost = 0;
 
-        // Calculate subtotal
-        cart.forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.classList.add('invoice-item');
-            itemDiv.innerText = `${item.name} - $${item.price.toFixed(2)}`;
-            invoiceItems.appendChild(itemDiv);
-            subtotal += item.price;
-        });
+            cartItems.forEach(item => {
+                const subTotal = item.price * item.quantity;
+                totalCost += subTotal;
 
-        // Calculate tax, discount, and total
-        tax = subtotal * taxRate;
-        discount = subtotal * discountRate;
-        total = subtotal + tax - discount;
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>${item.quantity}</td>
+                    <td>$${subTotal.toFixed(2)}</td>
+                `;
+                invoiceItemsContainer.appendChild(row);
+            });
 
-        // Display amounts
-        subtotalAmount.innerText = `Subtotal: $${subtotal.toFixed(2)}`;
-        taxAmount.innerText = `Tax (7%): $${tax.toFixed(2)}`;
-        discountAmount.innerText = `Discount (10%): -$${discount.toFixed(2)}`;
-        totalAmount.innerText = `Total: $${total.toFixed(2)}`;
-    }
+            // Display totals
+            document.getElementById("total-cost").textContent = `$${totalCost.toFixed(2)}`;
+            document.getElementById("amount-paid").textContent = `$${checkoutDetails.amountPaid.toFixed(2) || "0.00"}`;
+        }
 
-    // Call the function to render the invoice
-    renderInvoice();
+        // Function to download invoice
+        function downloadInvoice() {
+            const invoiceHTML = document.querySelector(".invoice-container").outerHTML;
+            const blob = new Blob([invoiceHTML], { type: "text/html" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Invoice_${Date.now()}.html`;
+            link.click();
+        }
 
-    // Function to cancel the order
-    function cancelOrder() {
-        cart = []; // Empty the cart
-        localStorage.removeItem('cart'); // Clear from localStorage
-        alert("Your order has been cancelled.");
-window.location.href = "Product.html";
-            }
+        // Generate invoice on page load
+        window.onload = generateInvoice;
+    </script>
 
-    // Function to exit the page
-    function exitPage() {
-        if (confirm("Are you sure you want to exit? Please manually close the browser tab if it doesn't close automatically.")) {
-            window.close();         }
-    }
-</script>
 </body>
 </html>
