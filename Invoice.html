@@ -11,8 +11,6 @@
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             padding-top: 30px;
-            background-size: cover;
-            background-image: url(Assets/BGP.jpg);
         }
         .invoice-container {
             width: 80%;
@@ -22,6 +20,13 @@
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 100px;
         }
         h1, h2 {
             font-family: 'Courier New', Courier, monospace;
@@ -43,9 +48,8 @@
     </style>
 </head>
 <body>
-     <img src="Assets/Logo.png" alt="Logo" class="logo"> 
-
     <div class="invoice-container">
+        <img src="Assets/Logo.png" alt="Elite Team Thread's Logo" class="logo">
         <h1>Elite Team Thread's</h1>
         <h2>Invoice</h2>
 
@@ -99,8 +103,9 @@
         function displayInvoice() {
             const checkoutDetails = JSON.parse(localStorage.getItem("checkoutDetails"));
             const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
+            let invoices = JSON.parse(localStorage.getItem("AllInvoices")) || [];
             let subtotal = 0;
+
             const orderSummary = document.getElementById("order-summary");
 
             cart.forEach((item) => {
@@ -135,10 +140,28 @@
                 <p><strong>Address:</strong> ${checkoutDetails.address}, ${checkoutDetails.city}, ${checkoutDetails.parish}, ${checkoutDetails.country}</p>
                 <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
             `;
+
+            // Create and append invoice
+            const newInvoice = {
+                customer: checkoutDetails.name,
+                items: cart,
+                subtotal: subtotal.toFixed(2),
+                discount: discount.toFixed(2),
+                tax: tax.toFixed(2),
+                total: total.toFixed(2),
+                amountPaid: checkoutDetails.amountPaid.toFixed(2),
+                balanceDue: balanceDue.toFixed(2),
+                date: new Date().toLocaleDateString()
+            };
+
+            invoices.push(newInvoice);
+            localStorage.setItem("AllInvoices", JSON.stringify(invoices));
+
+            // Display success message
+            alert(`Invoice sent to ${checkoutDetails.name}'s email!`);
         }
 
         displayInvoice();
     </script>
-
 </body>
 </html>
