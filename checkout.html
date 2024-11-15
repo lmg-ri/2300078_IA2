@@ -1,167 +1,229 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Invoice</title>
+<title>Checkout Page</title>
     <style>
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin: 0;
+            padding-top: 50px;
+            background-image: url(Assets/BGP.jpg);
+            background-size: cover;
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding-top: 30px;
+            color: #333;
         }
-        .invoice-container {
-            width: 80%;
-            max-width: 700px;
-            border: 1px solid #ccc;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            position: relative;
+
+        img.logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 120px;
+            height: auto;
+            animation: fadeIn 3s ease-in;
         }
-        .logo {
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h3 {
             position: absolute;
             top: 10px;
-            left: 10px;
-            width: 100px;
+            right: 20px;
         }
+
+        h3 a {
+            text-decoration: none;
+            color: blue;
+        }
+
+        h3 a:hover {
+            color: violet;
+            text-decoration: underline;
+        }
+
         h1, h2 {
-            font-family: 'Courier New', Courier, monospace;
-            text-align: center;
+            font-family: Courier New;
         }
-        table {
-            width: 100%;
+
+        #cart-summary, #checkoutForm table {
+            width: 80%;
+            max-width: 800px;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+
         th, td {
+            border: 1px solid #ccc;
             padding: 10px;
-            border: 1px solid #ddd;
             text-align: center;
+            font-family: Times New Roman;
         }
-        .total-row td {
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .button-container, .total {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: violet;
+        }
+
+        .total {
             font-weight: bold;
+            font-size: 1.2em;
+            text-align: right;
+            margin-right: 10%;
         }
     </style>
 </head>
 <body>
-    <div class="invoice-container">
-        <img src="Assets/Logo.png" alt="Elite Team Thread's Logo" class="logo">
-        <h1>Elite Team Thread's</h1>
-        <h2>Invoice</h2>
 
-        <div id="customer-details"></div>
+    <img src="Assets/Logo.png" alt="Logo" class="logo"> 
+    <h3>
+        <a href="Product.html">Product</a>
+    </h3>
 
-        <h3>Order Summary</h3>
+    <h1>Checkout</h1>
+
+    <h2>Shopping Cart Summary</h2>
+    <table id="cart-summary">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Sub-total</th>
+            </tr>
+        </thead>
+        <tbody id="cart-items">
+            
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="total">Total Cost:</td>
+                <td id="total-cost">$0.00</td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <h2>Shipping Details</h2>
+    <form id="checkoutForm">
         <table>
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Sub-total</th>
-                </tr>
-            </thead>
-            <tbody id="order-summary"></tbody>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" id="text1" name="name" required></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><input type="text" id="text2" name="address" required></td>
+            </tr>
+            <tr>
+                <td>City</td>
+                <td><input type="text" id="text3" name="city" required></td>
+            </tr>
+            <tr>
+                <td>Parish</td>
+                <td><input type="text" id="text4" name="parish" required></td>
+            </tr>
+            <tr>
+                <td>Country</td>
+                <td><input type="text" id="text5" name="country" required></td>
+            </tr>
+            <tr>
+                <td>Amount Being Paid</td>
+                <td><input type="number" id="amountPaid" name="amountPaid" required></td>
+            </tr>
         </table>
 
-        <table>
-            <tr>
-                <td>Subtotal:</td>
-                <td id="subtotal">$0.00</td>
-            </tr>
-            <tr>
-                <td>Discount:</td>
-                <td id="discount">$0.00</td>
-            </tr>
-            <tr>
-                <td>Tax (15%):</td>
-                <td id="tax">$0.00</td>
-            </tr>
-            <tr class="total-row">
-                <td>Total:</td>
-                <td id="total">$0.00</td>
-            </tr>
-            <tr>
-                <td>Amount Paid:</td>
-                <td id="amount-paid">$0.00</td>
-            </tr>
-            <tr class="total-row">
-                <td>Balance Due:</td>
-                <td id="balance-due">$0.00</td>
-            </tr>
-        </table>
-    </div>
+        <div class="button-container">
+            <button type="button" onclick="confirmCheckout()">Confirm Checkout</button>
+            <button type="button" onclick="cancelCheckout()">Cancel</button>
+        </div>
+    </form>
 
     <script>
-        const TAX_RATE = 0.15;  
-        const DISCOUNT_RATE = 0.10; 
-
-        function displayInvoice() {
-            const checkoutDetails = JSON.parse(localStorage.getItem("checkoutDetails"));
-            const cart = JSON.parse(localStorage.getItem("cart")) || [];
-            let invoices = JSON.parse(localStorage.getItem("AllInvoices")) || [];
-            let subtotal = 0;
-
-            const orderSummary = document.getElementById("order-summary");
-
+        let totalCost = 0;
+        
+        function displayCartSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItemsContainer = document.getElementById("cart-items");
+            const totalCostContainer = document.getElementById("total-cost");
+    
             cart.forEach((item) => {
-                const itemSubtotal = item.price * item.quantity;
-                subtotal += itemSubtotal;
-
+                const subTotal = item.price * item.quantity;
+                totalCost += subTotal;
+    
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${item.name}</td>
                     <td>$${item.price.toFixed(2)}</td>
                     <td>${item.quantity}</td>
-                    <td>$${itemSubtotal.toFixed(2)}</td>
+                    <td>$${subTotal.toFixed(2)}</td>
                 `;
-                orderSummary.appendChild(row);
+                cartItemsContainer.appendChild(row);
             });
-
-            const discount = subtotal * DISCOUNT_RATE;
-            const taxableAmount = subtotal - discount;
-            const tax = taxableAmount * TAX_RATE;
-            const total = taxableAmount + tax;
-            const balanceDue = total - checkoutDetails.amountPaid;
-
-            document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById("discount").textContent = `-$${discount.toFixed(2)}`;
-            document.getElementById("tax").textContent = `$${tax.toFixed(2)}`;
-            document.getElementById("total").textContent = `$${total.toFixed(2)}`;
-            document.getElementById("amount-paid").textContent = `$${checkoutDetails.amountPaid.toFixed(2)}`;
-            document.getElementById("balance-due").textContent = `$${balanceDue.toFixed(2)}`;
-
-            document.getElementById("customer-details").innerHTML = `
-                <p><strong>Name:</strong> ${checkoutDetails.name}</p>
-                <p><strong>Address:</strong> ${checkoutDetails.address}, ${checkoutDetails.city}, ${checkoutDetails.parish}, ${checkoutDetails.country}</p>
-                <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-            `;
-
-            // Create and append invoice
-            const newInvoice = {
-                customer: checkoutDetails.name,
-                items: cart,
-                subtotal: subtotal.toFixed(2),
-                discount: discount.toFixed(2),
-                tax: tax.toFixed(2),
-                total: total.toFixed(2),
-                amountPaid: checkoutDetails.amountPaid.toFixed(2),
-                balanceDue: balanceDue.toFixed(2),
-                date: new Date().toLocaleDateString()
-            };
-
-            invoices.push(newInvoice);
-            localStorage.setItem("AllInvoices", JSON.stringify(invoices));
-
-            // Display success message
-            alert(`Invoice sent to ${checkoutDetails.name}'s email!`);
+    
+            totalCostContainer.textContent = `$${totalCost.toFixed(2)}`;
         }
+    
+        function confirmCheckout() {
+    
+    const name = document.getElementById("text1").value;
+    const address = document.getElementById("text2").value;
+    const city = document.getElementById("text3").value;
+    const parish = document.getElementById("text4").value;
+    const country = document.getElementById("text5").value;
+    const amountPaid = parseFloat(document.getElementById("amountPaid").value);
 
-        displayInvoice();
+    
+    if (!name || !address || !city || !parish || !country || isNaN(amountPaid)) {
+        alert("Please fill in all fields to proceed.");
+        return;
+    }
+
+    
+    if (amountPaid < totalCost) {
+        alert("Error: Amount Being Paid is less than the total cost. Please pay the full amount to proceed.");
+    } else {
+        
+        const checkoutDetails = {
+            name,
+            address,
+            city,
+            parish,
+            country,
+            amountPaid,
+            totalCost
+        };
+        localStorage.setItem("checkoutDetails", JSON.stringify(checkoutDetails));
+
+        window.location.href = "Invoice.html";
+    }
+}
+
+        displayCartSummary();
     </script>
+
 </body>
 </html>
