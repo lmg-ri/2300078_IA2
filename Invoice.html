@@ -160,7 +160,7 @@
                 <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
             `;
 
-            // Create and append invoice
+           
             const newInvoice = {
                 customer: checkoutDetails.name,
                 items: cart,
@@ -176,7 +176,7 @@
             invoices.push(newInvoice);
             localStorage.setItem("AllInvoices", JSON.stringify(invoices));
 
-            // Display success message
+            
             alert(`Invoice sent to ${checkoutDetails.name}'s email!`);
         }
 
