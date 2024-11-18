@@ -207,6 +207,8 @@
         alert("Error: Amount Being Paid is less than the total cost. Please pay the full amount to proceed.");
     } else {
         
+        const registerData = JSON.parse(localStorage.getItem("RegisterData"));
+
         const checkoutDetails = {
             name,
             address,
@@ -215,6 +217,7 @@
             country,
             amountPaid,
             totalCost
+            trn: registerData ? registerData.trn : null
         };
         localStorage.setItem("checkoutDetails", JSON.stringify(checkoutDetails));
 
