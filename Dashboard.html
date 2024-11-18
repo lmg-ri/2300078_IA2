@@ -80,7 +80,7 @@
 </head>
 <body>
     <img src="Assets/Logo.png" alt="Elite Team Thread's Logo" class="logo"> 
-//GetUserInvoices() – displays all the invoices for a user based on trn stored in the localStorage key called, RegisterData.
+    <!-- GetUserInvoices() – displays all the invoices for a user based on TRN stored in the localStorage key called, RegisterData. -->
     
     <div class="dashboard-container">
         <h3>User Invoices Based on TRN</h3>
@@ -92,7 +92,7 @@
         </div>
         
         <div id="user-invoices-container" class="invoice-summary">
-            <h2>Your Invoices</h2>
+            <h2>Searched Invoices</h2>
             <table>
                 <thead>
                     <tr>
@@ -131,12 +131,12 @@
             GetUserInvoices();
         }
 
+        // Function to display all invoices for a user based on TRN
         function GetUserInvoices() {
             // Retrieve user TRN from localStorage
             const registerData = JSON.parse(localStorage.getItem("RegisterData"));
             const userTRN = registerData ? registerData.trn : null;
-
-                        const allInvoices = JSON.parse(localStorage.getItem("AllInvoices")) || [];
+            const allInvoices = JSON.parse(localStorage.getItem("AllInvoices")) || [];
 
             // Check if user TRN is available
             if (!userTRN) {
@@ -173,6 +173,11 @@
                 userInvoicesTable.appendChild(noInvoicesRow);
             }
         }
+
+        // Automatically call GetUserInvoices() on page load
+        window.onload = function() {
+            GetUserInvoices();
+        };
     </script>
 </body>
 </html>
