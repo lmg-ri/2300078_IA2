@@ -83,14 +83,38 @@
     <!-- GetUserInvoices() – displays all the invoices for a user based on TRN stored in the localStorage key called, RegisterData. -->
     
     <div class="dashboard-container">
-        <h3>User Invoices Based on TRN</h3>
+        <h3>Automatically Displayed Invoices</h3>
         
+        <!-- Automatic Invoice Table -->
+        <div id="auto-user-invoices-container" class="invoice-summary">
+            <h2> Your Invoice/s</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Subtotal</th>
+                        <th>Discount</th>
+                        <th>Tax</th>
+                        <th>Total</th>
+                        <th>Amount Paid</th>
+                        <th>Balance Due</th>
+                    </tr>
+                </thead>
+                <tbody id="auto-user-invoices"></tbody>
+            </table>
+        </div>
+        
+        <h3> Search Result</h3>
+        
+        <!-- Manual Search Form -->
         <div>
             <label for="trn-input">Enter your TRN:</label>
             <input type="text" id="trn-input" placeholder="Enter TRN here">
             <button onclick="promptUserTRN()">Display Invoices</button>
         </div>
         
+        <!-- Manual Search Invoice Table -->
         <div id="user-invoices-container" class="invoice-summary">
             <h2>Searched Invoices</h2>
             <table>
@@ -147,11 +171,19 @@
             // Filter invoices that match the user's TRN
             const userInvoices = allInvoices.filter(invoice => invoice.customerTRN === userTRN);
 
-            // Display user invoices in the table
-            const userInvoicesTable = document.getElementById("user-invoices");
+            // Display user invoices in the automatic table
+            displayInvoices(userInvoices, "auto-user-invoices");
+
+            // Display user invoices in the manual search table
+            displayInvoices(userInvoices, "user-invoices");
+        }
+
+        // Helper function to display invoices in a specified table
+        function displayInvoices(invoices, tableId) {
+            const userInvoicesTable = document.getElementById(tableId);
             userInvoicesTable.innerHTML = ""; // Clear any existing rows
 
-            userInvoices.forEach(invoice => {
+            invoices.forEach(invoice => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${invoice.date}</td>
@@ -166,7 +198,7 @@
                 userInvoicesTable.appendChild(row);
             });
 
-            if (userInvoices.length === 0) {
+            if (invoices.length === 0) {
                 // Show a message if no invoices are found
                 const noInvoicesRow = document.createElement("tr");
                 noInvoicesRow.innerHTML = `<td colspan="8">No invoices found for your TRN.</td>`;
