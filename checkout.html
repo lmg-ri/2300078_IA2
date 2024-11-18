@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-<title>Checkout Page</title>
+    <title>Checkout Page</title>
     <style>
         body {
             display: flex;
@@ -158,7 +158,7 @@
 
         <div class="button-container">
             <button type="button" onclick="confirmCheckout()">Confirm Checkout</button>
-            <<button type="button" onclick="window.location.href='Product.html'">Cancel</button>
+            <button type="button" onclick="window.location.href='Product.html'">Cancel</button>
         </div>
     </form>
 
@@ -206,7 +206,6 @@
                 
                 const registerData = JSON.parse(localStorage.getItem("RegisterData"));
                 
-               
                 const checkoutDetails = {
                     name,
                     address,
@@ -215,7 +214,7 @@
                     country,
                     amountPaid,
                     totalCost,
-                    trn: registerData ? registerData.trn : null  
+                    trn: registerData ? registerData.trn : null  // Add TRN if available
                 };
 
                 localStorage.setItem("checkoutDetails", JSON.stringify(checkoutDetails));
@@ -225,7 +224,6 @@
         }
 
         displayCartSummary();
-
     </script>
 
 </body>
