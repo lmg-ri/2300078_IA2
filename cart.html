@@ -178,7 +178,7 @@ function displayCart() {
     // Loop through each item in the cart and create table rows for them
     cart.forEach((cartItem, index) => {
         const itemTotal = cartItem.price * cartItem.quantity;
-        const discount = itemTotal * DISCOUNT_RATE;
+        const discount = 0;
         const tax = (itemTotal - discount) * TAX_RATE;
         const finalTotal = itemTotal - discount + tax;
 
