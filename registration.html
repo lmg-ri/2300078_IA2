@@ -13,7 +13,7 @@
             margin: 5;
             background-image: url('Assets/ET.png');
         }
-        img { 
+        img {
             position: absolute;
             top: 0;
             left: 0;
@@ -34,12 +34,12 @@
             top: 200px;
             left: 10%;
             right: 10%;
-            transform: translateX(.50%);
+            transform: translateX(0.50%);
             border: 2px solid black;
             padding: 20px;
             border-radius: 8px;
         }
-        input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="tel"] {
+        input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="tel"], select {
             width: 100%;
             max-width: 300px;
             padding: 10px;
@@ -53,36 +53,23 @@
             margin-top: 10px;
             background-color: #F7D9B0;
         }
-
-        select {
-        width: 100%;
-        max-width: 300px;
-        padding: 10px;
-        margin: 5px 0;
-        box-sizing: border-box;
-    }
-
-    button:hover {
-    background-color: violet; 
-    opacity: 0.8; 
-}
-
-
+        button:hover {
+            background-color: violet;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
     <img src="Assets/Logo.png" alt="Logo" class="logo">
     <div class="registration-container">
-       <center> <h2>Register</h2> </center>
+        <center><h2>Register</h2></center>
         <form id="registrationForm">
             <input type="text" id="first-name" placeholder="First Name" required>
             <input type="text" id="last-name" placeholder="Last Name" required>
             <input type="date" id="dob" placeholder="Date of Birth" required>
-            <br>
             <input type="tel" id="phone" placeholder="Phone Number" required>
             <input type="email" id="email" placeholder="Email Address" required>
             <input type="text" id="trn" placeholder="Tax Registration Number (000-000-000)" pattern="\d{3}-\d{3}-\d{3}" required>
-            <br>
             <select id="gender" required>
                 <option value="">Gender</option>
                 <option value="Male">Male</option>
@@ -90,42 +77,53 @@
             </select>
             <input type="password" id="password" placeholder="Password" minlength="8" required>
             <input type="password" id="confirm-password" placeholder="Confirm Password" minlength="8" required>
-            <br>
             <label>
                 <input type="checkbox" id="show-password"> Show Password
             </label>
-            <br>
             <button type="submit">Register</button>
             <button type="button" onclick="clearForm()">Cancel</button>
-            <br><br>
             <a href="Login.html">Have an Account?</a>
         </form>
         <p id="error-message"></p>
     </div>
 
     <script>
+        // Validate age based on DOB
         function validateAge(dob) {
             const birthDate = new Date(dob);
             const today = new Date();
-            const age = today.getFullYear() - birthDate.getFullYear();
+            let age = today.getFullYear() - birthDate.getFullYear();
             const monthDifference = today.getMonth() - birthDate.getMonth();
             if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-                return age - 1;
+                age--;
             }
             return age;
         }
 
+        // Determine age group
+        function getAgeGroup(age) {
+            if (age >= 18 && age <= 25) return "18-25";
+            if (age >= 26 && age <= 35) return "26-35";
+            if (age >= 36 && age <= 50) return "36-50";
+            if (age > 50) return "50+";
+            return "Unknown";
+        }
+
+        // Check if TRN is unique
         function isTRNUnique(trn) {
             const registrations = JSON.parse(localStorage.getItem("RegistrationData")) || [];
             return !registrations.some(user => user.trn === trn);
         }
 
+        // Clear the form
         function clearForm() {
             document.getElementById("registrationForm").reset();
         }
 
+        // Handle form submission
         document.getElementById("registrationForm").addEventListener("submit", function(event) {
             event.preventDefault();
+
             const firstName = document.getElementById("first-name").value;
             const lastName = document.getElementById("last-name").value;
             const dob = document.getElementById("dob").value;
@@ -137,7 +135,10 @@
             const confirmPassword = document.getElementById("confirm-password").value;
             const errorMessage = document.getElementById("error-message");
 
-            if (validateAge(dob) < 18) {
+            const age = validateAge(dob);
+            const ageGroup = getAgeGroup(age);
+
+            if (age < 18) {
                 errorMessage.textContent = "You must be over 18 to register.";
                 return;
             }
@@ -161,6 +162,7 @@
                 email,
                 trn,
                 password,
+                ageGroup,
                 dateOfRegistration: new Date().toISOString(),
                 cart: {},
                 invoices: []
@@ -171,9 +173,10 @@
             localStorage.setItem("RegistrationData", JSON.stringify(registrations));
 
             alert("Registration successful!");
-            window.location.href = "Login.html"; // Redirect to login page after successful registration
+            window.location.href = "Login.html"; // Redirect after registration
         });
 
+        // Toggle password visibility
         document.getElementById("show-password").addEventListener("change", function() {
             const passwordField = document.getElementById("password");
             const confirmPasswordField = document.getElementById("confirm-password");

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - User Invoices</title>
+    <title>Dashboard - User Overview</title>
     <style>
         body {
             display: flex;
@@ -57,7 +57,7 @@
             font-weight: bold;
         }
 
-        .invoice-summary {
+        .frequency-summary, .invoice-summary {
             width: 100%;
             margin-top: 20px;
         }
@@ -79,18 +79,22 @@
     </style>
 </head>
 <body>
-    <img src="Assets/Logo.png" alt="Elite Team Thread's Logo" class="logo"> 
-    <!-- GetUserInvoices() – displays all the invoices for a user based on TRN stored in the localStorage key called, RegisterData. -->
-    
+    <img src="Assets/Logo.png" alt="Elite Team Thread's Logo" class="logo">
+
+    <div class="dashboard-container">
+        <h3>User Frequency by Gender and Age Group</h3>
+        <div id="user-frequency-gender"></div>
+        <div id="user-frequency-age"></div>
+        <div id="gender-total"></div>
+    </div>
+
     <div class="dashboard-container">
         <h3>User Invoices Based on TRN</h3>
-        
         <div>
             <label for="trn-input">Enter your TRN:</label>
             <input type="text" id="trn-input" placeholder="Enter TRN here">
             <button onclick="promptUserTRN()">Display Invoices</button>
         </div>
-        
         <div id="user-invoices-container" class="invoice-summary">
             <h2>Searched Invoices</h2>
             <table>
@@ -112,44 +116,70 @@
     </div>
 
     <script>
-        // Function to handle TRN input and fetch invoices
+        function ShowUserFrequency() {
+            const registrations = JSON.parse(localStorage.getItem("RegistrationData")) || [];
+
+            // Calculate gender frequency
+            const genderFrequency = registrations.reduce((acc, user) => {
+                acc[user.gender] = (acc[user.gender] || 0) + 1;
+                return acc;
+            }, {});
+
+            // Calculate age group frequency
+            const ageGroupFrequency = registrations.reduce((acc, user) => {
+                acc[user.ageGroup] = (acc[user.ageGroup] || 0) + 1;
+                return acc;
+            }, {});
+
+            // Display frequencies on the page
+            const genderContainer = document.getElementById("user-frequency-gender");
+            const ageContainer = document.getElementById("user-frequency-age");
+            const genderTotalContainer = document.getElementById("gender-total");
+
+            genderContainer.innerHTML = `<h4>Gender Frequency</h4>`;
+            let totalGenders = 0;
+            for (const [gender, count] of Object.entries(genderFrequency)) {
+                genderContainer.innerHTML += `<p>${gender}: ${count}</p>`;
+                totalGenders += count;
+            }
+
+            ageContainer.innerHTML = `<h4>Age Group Frequency</h4>`;
+            for (const [ageGroup, count] of Object.entries(ageGroupFrequency)) {
+                ageContainer.innerHTML += `<p>${ageGroup}: ${count}</p>`;
+            }
+
+            // Display the total count of all genders
+            genderTotalContainer.innerHTML = `<h4>Total Users Signed Up</h4><p>${totalGenders}</p>`;
+        }
+
         function promptUserTRN() {
             const trnInput = document.getElementById('trn-input').value.trim();
-            
-            // Check if TRN is entered
+
             if (!trnInput) {
                 alert('Please enter a valid TRN.');
                 return;
             }
 
-            // Save TRN to localStorage for filtering
             const registerData = JSON.parse(localStorage.getItem("RegisterData")) || {};
-            registerData.trn = trnInput;  // Store the entered TRN
+            registerData.trn = trnInput;
             localStorage.setItem("RegisterData", JSON.stringify(registerData));
 
-            // Call the function to display user invoices based on the entered TRN
             GetUserInvoices();
         }
 
-        // Function to display all invoices for a user based on TRN
         function GetUserInvoices() {
-            // Retrieve user TRN from localStorage
             const registerData = JSON.parse(localStorage.getItem("RegisterData"));
             const userTRN = registerData ? registerData.trn : null;
             const allInvoices = JSON.parse(localStorage.getItem("AllInvoices")) || [];
 
-            // Check if user TRN is available
             if (!userTRN) {
                 alert("User TRN not found. Please ensure you've entered a TRN.");
                 return;
             }
 
-            // Filter invoices that match the user's TRN
             const userInvoices = allInvoices.filter(invoice => invoice.customerTRN === userTRN);
-
-            // Display user invoices in the table
             const userInvoicesTable = document.getElementById("user-invoices");
-            userInvoicesTable.innerHTML = ""; // Clear any existing rows
+            userInvoicesTable.innerHTML = "";
 
             userInvoices.forEach(invoice => {
                 const row = document.createElement("tr");
@@ -167,15 +197,14 @@
             });
 
             if (userInvoices.length === 0) {
-                // Show a message if no invoices are found
                 const noInvoicesRow = document.createElement("tr");
                 noInvoicesRow.innerHTML = `<td colspan="8">No invoices found for your TRN.</td>`;
                 userInvoicesTable.appendChild(noInvoicesRow);
             }
         }
 
-        // Automatically call GetUserInvoices() on page load
-        window.onload = function() {
+        window.onload = function () {
+            ShowUserFrequency();
             GetUserInvoices();
         };
     </script>
