@@ -131,24 +131,36 @@
                 return acc;
             }, {});
 
-            // Display frequencies on the page
+            // Display gender bar chart
             const genderContainer = document.getElementById("user-frequency-gender");
-            const ageContainer = document.getElementById("user-frequency-age");
-            const genderTotalContainer = document.getElementById("gender-total");
-
             genderContainer.innerHTML = `<h4>Gender Frequency</h4>`;
             let totalGenders = 0;
             for (const [gender, count] of Object.entries(genderFrequency)) {
-                genderContainer.innerHTML += `<p>${gender}: ${count}</p>`;
+                genderContainer.innerHTML += `
+                    <div style="display: flex; align-items: center; margin: 5px 0;">
+                        <span style="width: 100px; text-align: right; margin-right: 10px;">${gender}:</span>
+                        <div style="background-color: blue; height: 20px; width: ${count * 20}px;"></div>
+                        <span style="margin-left: 10px;">${count}</span>
+                    </div>
+                `;
                 totalGenders += count;
             }
 
+            // Display age group bar chart
+            const ageContainer = document.getElementById("user-frequency-age");
             ageContainer.innerHTML = `<h4>Age Group Frequency</h4>`;
             for (const [ageGroup, count] of Object.entries(ageGroupFrequency)) {
-                ageContainer.innerHTML += `<p>${ageGroup}: ${count}</p>`;
+                ageContainer.innerHTML += `
+                    <div style="display: flex; align-items: center; margin: 5px 0;">
+                        <span style="width: 100px; text-align: right; margin-right: 10px;">${ageGroup}:</span>
+                        <div style="background-color: green; height: 20px; width: ${count * 20}px;"></div>
+                        <span style="margin-left: 10px;">${count}</span>
+                    </div>
+                `;
             }
 
-            // Display the total count of all genders
+            // Display total gender count
+            const genderTotalContainer = document.getElementById("gender-total");
             genderTotalContainer.innerHTML = `<h4>Total Users Signed Up</h4><p>${totalGenders}</p>`;
         }
 
