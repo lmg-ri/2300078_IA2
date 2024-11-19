@@ -36,26 +36,9 @@
             width: 100px;
         }
 
-        h4 {
+        h2, h3 {
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
-        }
-        
-        h3 {
-            position: absolute;              
-            top: 10px;           
-            right: 20px;         
-        }
-
-        h3 a {
-            text-decoration: none; 
-            font-family: Arial, sans-serif;
-            color: blue;         
-        }
-
-        h3 a:hover {
-            color: violet;    
-            text-decoration: underline; 
         }
 
         table {
@@ -93,32 +76,23 @@
         button:hover {
             background-color: violet;
         }
-
-        #search-section {
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
     <img src="Assets/Logo.png" alt="Elite Team Thread's Logo" class="logo"> 
-    <h3>
-        <a href="index.html">Home</a>&nbsp;&nbsp;
-        <a href="Product.html">Product</a>
-    </h3>
-
+    <!-- GetUserInvoices() – displays all the invoices for a user based on TRN stored in the localStorage key called, RegisterData. -->
+    
     <div class="dashboard-container">
-        <h4>User Invoices Based on TRN</h4>
+        <h3>User Invoices Based on TRN</h3>
         
-        <!-- Section for User Invoices by TRN -->
         <div>
             <label for="trn-input">Enter your TRN:</label>
             <input type="text" id="trn-input" placeholder="Enter TRN here">
             <button onclick="promptUserTRN()">Display Invoices</button>
         </div>
         
-        <!-- Display of User Invoices -->
         <div id="user-invoices-container" class="invoice-summary">
-            <h2>Your Invoices</h2>
+            <h2>Searched Invoices</h2>
             <table>
                 <thead>
                     <tr>
@@ -135,17 +109,10 @@
                 <tbody id="user-invoices"></tbody>
             </table>
         </div>
-
-        <!-- Automatic Invoice Display Section -->
-        <div id="search-section">
-            <h4>All Invoices</h4>
-            <!-- Automatically display all invoices here when the page loads -->
-            <div id="invoice-list" class="invoice-summary"></div>
-        </div>
     </div>
 
     <script>
-        // Function to handle TRN input and fetch invoices specific to the user
+        // Function to handle TRN input and fetch invoices
         function promptUserTRN() {
             const trnInput = document.getElementById('trn-input').value.trim();
             
@@ -164,20 +131,25 @@
             GetUserInvoices();
         }
 
-        // Function to fetch and display user-specific invoices
+        // Function to display all invoices for a user based on TRN
         function GetUserInvoices() {
+            // Retrieve user TRN from localStorage
             const registerData = JSON.parse(localStorage.getItem("RegisterData"));
             const userTRN = registerData ? registerData.trn : null;
             const allInvoices = JSON.parse(localStorage.getItem("AllInvoices")) || [];
 
+            // Check if user TRN is available
             if (!userTRN) {
                 alert("User TRN not found. Please ensure you've entered a TRN.");
                 return;
             }
 
+            // Filter invoices that match the user's TRN
             const userInvoices = allInvoices.filter(invoice => invoice.customerTRN === userTRN);
+
+            // Display user invoices in the table
             const userInvoicesTable = document.getElementById("user-invoices");
-            userInvoicesTable.innerHTML = "";
+            userInvoicesTable.innerHTML = ""; // Clear any existing rows
 
             userInvoices.forEach(invoice => {
                 const row = document.createElement("tr");
@@ -195,52 +167,17 @@
             });
 
             if (userInvoices.length === 0) {
+                // Show a message if no invoices are found
                 const noInvoicesRow = document.createElement("tr");
                 noInvoicesRow.innerHTML = `<td colspan="8">No invoices found for your TRN.</td>`;
                 userInvoicesTable.appendChild(noInvoicesRow);
             }
         }
 
-        // Automatically show all invoices on page load
+        // Automatically call GetUserInvoices() on page load
         window.onload = function() {
-            ShowInvoices();
+            GetUserInvoices();
         };
-
-        // Function to show all invoices and display them on page load
-        function ShowInvoices() {
-            const allInvoices = JSON.parse(localStorage.getItem("AllInvoices")) || [];
-            displayAllInvoices(allInvoices);
-        }
-
-        // Function to display all invoices in the "All Invoices" section
-        function displayAllInvoices(invoices) {
-            const invoiceList = document.getElementById("invoice-list");
-            invoiceList.innerHTML = "";
-
-            invoices.forEach((invoice, index) => {
-                const invoiceDiv = document.createElement("div");
-                invoiceDiv.style.marginBottom = "20px";
-                invoiceDiv.style.padding = "10px";
-                invoiceDiv.style.border = "1px solid #ccc";
-                invoiceDiv.style.borderRadius = "5px";
-                invoiceDiv.style.backgroundColor = "#f9f9f9";
-
-                invoiceDiv.innerHTML = `
-                    <h4>Invoice #${index + 1}</h4>
-                    <p><strong>Customer Name:</strong> ${invoice.customer}</p>
-                    <p><strong>Customer TRN:</strong> ${invoice.customerTRN}</p>
-                    <p><strong>Date:</strong> ${invoice.date}</p>
-                    <p><strong>Total:</strong> $${invoice.total}</p>
-                    <p><strong>Balance Due:</strong> $${invoice.balanceDue}</p>
-                `;
-
-                invoiceList.appendChild(invoiceDiv);
-            });
-
-            if (invoices.length === 0) {
-                invoiceList.innerHTML = `<p>No invoices found.</p>`;
-            }
-        }
     </script>
 </body>
 </html>
