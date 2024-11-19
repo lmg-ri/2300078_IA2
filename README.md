@@ -1,9 +1,9 @@
 Group Members:
 Jade Freeman, 2300078, jadeivory555@gmail.com - Product
 
-Shavon Gordon, 2306989, gordonshavon98@gmail.com - Checkout 
+Shavon Gordon, 2306989, gordonshavon98@gmail.com - Checkout & Invoice
 
-Rianna Henningham, 2207917, riannabhenningham@students.utech.edu.jm - User Registration & Invoice
+Rianna Henningham, 2207917, riannabhenningham@students.utech.edu.jm - User Registration & Login
 
 Devany Walker, 2300064, devanywalker66@gmail.com - Cart
 
