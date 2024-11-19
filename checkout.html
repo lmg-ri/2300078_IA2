@@ -173,69 +173,79 @@
         </div>
     </form>
 
-    <script>
-        let totalCost = 0;
-        
-        function displayCartSummary() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const cartItemsContainer = document.getElementById("cart-items");
-            const totalCostContainer = document.getElementById("total-cost");
-    
-            cart.forEach((item) => {
-                const subTotal = item.price * item.quantity;
-                totalCost += subTotal;
-    
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>$${item.price.toFixed(2)}</td>
-                    <td>${item.quantity}</td>
-                    <td>$${subTotal.toFixed(2)}</td>
-                `;
-                cartItemsContainer.appendChild(row);
-            });
-    
-            totalCostContainer.textContent = `$${totalCost.toFixed(2)}`;
-        }
-    
-        function confirmCheckout() {
-            const name = document.getElementById("text1").value;
-            const address = document.getElementById("text2").value;
-            const city = document.getElementById("text3").value;
-            const parish = document.getElementById("text4").value;
-            const country = document.getElementById("text5").value;
-            const amountPaid = parseFloat(document.getElementById("amountPaid").value);
+<script>
+let totalCost = 0;
 
-            if (!name || !address || !city || !parish || !country || isNaN(amountPaid)) {
-                alert("Please fill in all fields to proceed.");
-                return;
-            }
+function displayCartSummary() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartItemsContainer = document.getElementById("cart-items");
+    const totalCostContainer = document.getElementById("total-cost");
+    const storedTotal = localStorage.getItem("grandTotal");
 
-            if (amountPaid < totalCost) {
-                alert("Error: Amount Being Paid is less than the total cost. Please pay the full amount to proceed.");
-            } else {
-                
-                const registerData = JSON.parse(localStorage.getItem("RegisterData"));
-                
-                const checkoutDetails = {
-                    name,
-                    address,
-                    city,
-                    parish,
-                    country,
-                    amountPaid,
-                    totalCost,
-                    trn: registerData ? registerData.trn : null  
-                };
+    if (storedTotal) {
+        totalCost = parseFloat(storedTotal); // Use the stored total
+    } else {
+        // Fallback calculation if grandTotal is missing
+        cart.forEach((item) => {
+            totalCost += item.price * item.quantity;
+        });
+    }
 
-                localStorage.setItem("checkoutDetails", JSON.stringify(checkoutDetails));
+    // Populate the table with cart items
+    cart.forEach((item) => {
+        const subTotal = item.price * item.quantity;
 
-                window.location.href = "Invoice.html";
-            }
-        }
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${item.name}</td>
+            <td>$${item.price.toFixed(2)}</td>
+            <td>${item.quantity}</td>
+            <td>$${subTotal.toFixed(2)}</td>
+        `;
+        cartItemsContainer.appendChild(row);
+    });
 
-        displayCartSummary();
-    </script>
+    totalCostContainer.textContent = `$${totalCost.toFixed(2)}`;
+}
+
+function confirmCheckout() {
+    const name = document.getElementById("text1").value;
+    const address = document.getElementById("text2").value;
+    const city = document.getElementById("text3").value;
+    const parish = document.getElementById("text4").value;
+    const country = document.getElementById("text5").value;
+    const amountPaid = parseFloat(document.getElementById("amountPaid").value);
+
+    if (!name || !address || !city || !parish || !country || isNaN(amountPaid)) {
+        alert("Please fill in all fields to proceed.");
+        return;
+    }
+
+    if (amountPaid < totalCost) {
+        alert("Error: Amount Being Paid is less than the total cost. Please pay the full amount to proceed.");
+    } else {
+        const registerData = JSON.parse(localStorage.getItem("RegisterData"));
+
+        const checkoutDetails = {
+            name,
+            address,
+            city,
+            parish,
+            country,
+            amountPaid,
+            totalCost,
+            trn: registerData ? registerData.trn : null  
+        };
+
+        localStorage.setItem("checkoutDetails", JSON.stringify(checkoutDetails));
+
+        window.location.href = "Invoice.html";
+    }
+}
+
+displayCartSummary();
+</script>
+
 
 </body>
 </html>
