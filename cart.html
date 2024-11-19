@@ -154,7 +154,11 @@
 </div>
 
 <script>
-// Function to display the cart and calculate the total
+function getProducts() {
+    return JSON.parse(localStorage.getItem('products')) || [];
+}
+
+// Display the cart contents
 function displayCart() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const cartBody = document.getElementById("cart-body");
@@ -164,7 +168,6 @@ function displayCart() {
     if (cart.length === 0) {
         cartBody.innerHTML = "<tr><td colspan='8'>Your cart is empty.</td></tr>";
         totalAmount.textContent = "0.00";
-        localStorage.removeItem("grandTotal"); // Clear stored total if the cart is empty
         return;
     }
 
@@ -200,11 +203,37 @@ function displayCart() {
     });
 
     totalAmount.textContent = grandTotal.toFixed(2); 
-    localStorage.setItem("grandTotal", grandTotal.toFixed(2)); // Store the total in localStorage
 }
 
-// Other cart functions remain unchanged
+// Function to clear the cart
+function clearCart() {
+    localStorage.removeItem('cart');
+    displayCart(); 
+}
 
+// Function to remove an item from the cart
+function removeItem(index) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1); 
+    localStorage.setItem('cart', JSON.stringify(cart));
+    displayCart(); 
+}
+
+// Function to update quantity of an item
+function updateQuantity(index, change) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const item = cart[index];
+
+    if (item.quantity + change > 0) { // Prevent negative quantity
+        item.quantity += change;
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    displayCart(); 
+}
+
+// Initialize the cart display
+displayCart();
 </script>
 
 </body>
