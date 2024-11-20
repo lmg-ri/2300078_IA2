@@ -89,6 +89,12 @@
     </div>
 
     <script>
+
+    // Clear the cart from previous sessions 
+    window.onload = function() 
+    {
+       localStorage.removeItem('cart'); 
+    };
         let loginAttempts = 0;
 
         function clearForm() {
